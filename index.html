@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solo Leveling | Sitio de fans: el Sistema te ha elegido</title>
+  <meta name="description" content="Sitio de fans de Solo Leveling (Ore dake Level Up na Ken): historia, personajes, estilo visual, música y dónde ver el anime.">
+  <meta name="theme-color" content="#0A0A14">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <!-- Fondo de partículas / humo violeta -->
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a href="#inicio" class="logo" aria-label="Solo Leveling, ir al inicio">
+        <span class="logo-mark" aria-hidden="true">◈</span>
+        <span class="logo-text">SOLO <b>LEVELING</b></span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#historia">Historia</a></li>
+          <li><a href="#personajes">Personajes</a></li>
+          <li><a href="#estilo">Estilo y música</a></li>
+          <li><a href="#galeria">Galería</a></li>
+          <li><a href="#temporadas">Temporadas</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="inicio">
+      <div class="container hero-inner">
+        <p class="eyebrow reveal">// SISTEMA ACTIVO · RANGO E → ???</p>
+        <h1 class="hero-title reveal">
+          <span class="glitch" data-text="SOLO">SOLO</span>
+          <span class="glitch glitch-accent" data-text="LEVELING">LEVELING</span>
+        </h1>
+        <p class="hero-sub reveal">Ore dake Level Up na Ken · El cazador más débil del mundo acaba de recibir una segunda oportunidad.</p>
+
+        <div class="system-window reveal" role="status" aria-live="polite">
+          <div class="sw-head">
+            <span class="sw-dot" aria-hidden="true"></span>
+            <span>NOTIFICACIÓN</span>
+            <span class="sw-id">#0001</span>
+          </div>
+          <p class="sw-text" id="typing-target">
+            <span id="typing-text">[Notificación] Has sido elegido como Jugador.</span><span class="caret" aria-hidden="true">▍</span>
+          </p>
+          <div class="sw-actions">
+            <a class="btn btn-primary" href="#historia">Aceptar</a>
+            <a class="btn btn-ghost" href="#personajes">Ver cazadores</a>
+          </div>
+        </div>
+
+        <ul class="hero-stats reveal" aria-label="Datos rápidos">
+          <li><strong>2</strong><span>Temporadas</span></li>
+          <li><strong>A-1</strong><span>Pictures</span></li>
+          <li><strong>Sawano</strong><span>Banda sonora</span></li>
+        </ul>
+      </div>
+      <a class="scroll-hint" href="#historia" aria-label="Ir a la historia"><span></span></a>
+    </section>
+
+    <!-- ========== HISTORIA ========== -->
+    <section class="section" id="historia">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">// REGISTRO DE MISIÓN</p>
+          <h2>La historia</h2>
+          <p class="lead">Hace años se abrieron portales a mazmorras llenas de monstruos. Algunas personas despertaron poderes para enfrentarlos: los cazadores. Sung Jin-woo es el más débil de todos, y aun así sigue entrando.</p>
+        </header>
+
+        <div class="quest-grid">
+          <article class="glass quest reveal">
+            <span class="quest-num">MISIÓN 01</span>
+            <h3>El cazador más débil</h3>
+            <p>Rango E, sin dinero y con una madre hospitalizada. Jin-woo acepta las incursiones más peligrosas por unas pocas monedas, porque alguien debe pagar el tratamiento.</p>
+            <div class="quest-meta"><span>Dificultad</span><span class="tag tag-red">Extrema</span></div>
+          </article>
+
+          <article class="glass quest reveal">
+            <span class="quest-num">MISIÓN 02</span>
+            <h3>El Sistema</h3>
+            <p>Tras sobrevivir a un incidente casi mortal, aparece una interfaz que solo él puede ver: misiones diarias, estadísticas y una promesa inusual, la de poder mejorar sin límite.</p>
+            <div class="quest-meta"><span>Dificultad</span><span class="tag tag-blue">Desconocida</span></div>
+          </article>
+
+          <article class="glass quest reveal">
+            <span class="quest-num">MISIÓN 03</span>
+            <h3>Subir de nivel</h3>
+            <p>Entrenar, cazar y crecer mientras el mundo se pregunta cómo el más débil se volvió imparable. Cada mazmorra es una pieza más de un misterio mucho mayor.</p>
+            <div class="quest-meta"><span>Dificultad</span><span class="tag tag-violet">En aumento</span></div>
+          </article>
+        </div>
+
+        <aside class="glass quest-box reveal" aria-label="Recompensa de la misión">
+          <h3>[ RECOMPENSA ]</h3>
+          <ul>
+            <li><span>Acción, drama y superación personal</span><b>+100 XP</b></li>
+            <li><span>Peleas con animación espectacular</span><b>+250 XP</b></li>
+            <li><span>Un protagonista que cambia de verdad</span><b>+500 XP</b></li>
+          </ul>
+          <p class="note">Esta sección evita los spoilers importantes. Los fichajes de personajes marcan lo que pueda adelantar la trama.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ========== PERSONAJES ========== -->
+    <section class="section" id="personajes">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">// BASE DE DATOS DE JUGADORES</p>
+          <h2>Personajes</h2>
+          <p class="lead">Elige una ficha para ver su detalle. Las estadísticas son una interpretación de fan, no cifras oficiales.</p>
+        </header>
+
+        <div class="filters reveal" role="group" aria-label="Filtrar personajes por categoría">
+          <button class="filter-btn is-active" data-filter="todos" aria-pressed="true">Todos</button>
+          <button class="filter-btn" data-filter="cazadores" aria-pressed="false">Cazadores</button>
+          <button class="filter-btn" data-filter="sombras" aria-pressed="false">Sombras</button>
+          <button class="filter-btn" data-filter="familia" aria-pressed="false">Familia</button>
+        </div>
+
+        <div class="char-grid" id="char-grid" aria-live="polite">
+          <noscript><p class="note">Activa JavaScript para ver las fichas de personajes.</p></noscript>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ESTILO Y MÚSICA ========== -->
+    <section class="section" id="estilo">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">// ANÁLISIS VISUAL Y SONORO</p>
+          <h2>Estilo y música</h2>
+          <p class="lead">Una serie oscura, de alto contraste, donde la luz azul del Sistema choca con las sombras violetas.</p>
+        </header>
+
+        <div class="style-grid">
+          <article class="glass style-card reveal">
+            <span class="style-icon" aria-hidden="true">▶</span>
+            <h3>Animación</h3>
+            <p>Producida por A-1 Pictures. Mezcla animación 2D con efectos digitales: cámaras dinámicas, líneas de velocidad, destellos y partículas en cada pelea.</p>
+          </article>
+          <article class="glass style-card reveal">
+            <span class="style-icon" aria-hidden="true">◇</span>
+            <h3>Diseño de personajes</h3>
+            <p>Basado en el manhwa ilustrado por Dubu. Anatomía más realista que la de un anime tradicional, con rasgos marcados y expresiones serias.</p>
+          </article>
+          <article class="glass style-card reveal">
+            <span class="style-icon" aria-hidden="true">▣</span>
+            <h3>La interfaz del Sistema</h3>
+            <p>Ventanas translúcidas azules con barras, estadísticas y misiones, como en un videojuego RPG. Es el sello visual de la serie, y el de este sitio.</p>
+          </article>
+          <article class="glass style-card reveal">
+            <span class="style-icon" aria-hidden="true">♪</span>
+            <h3>Banda sonora</h3>
+            <p>Obra de Hiroyuki Sawano: orquesta épica, coros y electrónica. Su música da peso a cada combate y a cada momento de tensión.</p>
+          </article>
+        </div>
+
+        <div class="palette reveal">
+          <h3>Paleta de colores</h3>
+          <ul class="swatches">
+            <li><button class="swatch" style="--c:#0A0A14" data-hex="#0A0A14" aria-label="Copiar color #0A0A14"><i></i><span>Negro azulado</span><code>#0A0A14</code></button></li>
+            <li><button class="swatch" style="--c:#14141F" data-hex="#14141F" aria-label="Copiar color #14141F"><i></i><span>Gris oscuro</span><code>#14141F</code></button></li>
+            <li><button class="swatch" style="--c:#2D8CFF" data-hex="#2D8CFF" aria-label="Copiar color #2D8CFF"><i></i><span>Azul del Sistema</span><code>#2D8CFF</code></button></li>
+            <li><button class="swatch" style="--c:#7B2FFF" data-hex="#7B2FFF" aria-label="Copiar color #7B2FFF"><i></i><span>Violeta de las Sombras</span><code>#7B2FFF</code></button></li>
+            <li><button class="swatch" style="--c:#C8102E" data-hex="#C8102E" aria-label="Copiar color #C8102E"><i></i><span>Rojo peligro</span><code>#C8102E</code></button></li>
+            <li><button class="swatch" style="--c:#E8EEF7" data-hex="#E8EEF7" aria-label="Copiar color #E8EEF7"><i></i><span>Blanco hielo</span><code>#E8EEF7</code></button></li>
+          </ul>
+          <p class="note" id="copy-note" role="status">Haz clic en un color para copiar su código.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== GALERÍA ========== -->
+    <section class="section" id="galeria">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">// ARCHIVO VISUAL</p>
+          <h2>Galería</h2>
+          <p class="lead">Ilustraciones originales hechas para este sitio, sin imágenes oficiales. Puedes reemplazarlas por tus propios dibujos.</p>
+        </header>
+
+        <div class="gallery">
+          <figure class="tile tile-a reveal">
+            <svg viewBox="0 0 200 200" role="img" aria-label="Portal de mazmorra con resplandor azul">
+              <defs><radialGradient id="gA" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#2D8CFF" stop-opacity=".9"/><stop offset="1" stop-color="#7B2FFF" stop-opacity="0"/></radialGradient></defs>
+              <circle cx="100" cy="100" r="90" fill="url(#gA)"/>
+              <ellipse cx="100" cy="100" rx="38" ry="62" fill="none" stroke="#E8EEF7" stroke-width="2" opacity=".85"/>
+              <ellipse cx="100" cy="100" rx="24" ry="46" fill="none" stroke="#2D8CFF" stroke-width="2" opacity=".8"/>
+              <ellipse cx="100" cy="100" rx="10" ry="28" fill="#0A0A14" stroke="#7B2FFF" stroke-width="2"/>
+            </svg>
+            <figcaption>Portal de mazmorra</figcaption>
+          </figure>
+
+          <figure class="tile tile-b reveal">
+            <svg viewBox="0 0 200 200" role="img" aria-label="Dos dagas cruzadas">
+              <g stroke="#E8EEF7" stroke-width="3" stroke-linecap="round" fill="none">
+                <path d="M55 150 L140 50"/><path d="M145 150 L60 50"/>
+              </g>
+              <g fill="#2D8CFF"><path d="M140 50 l10 -12 l2 16 z"/><path d="M60 50 l-10 -12 l-2 16 z"/></g>
+              <g stroke="#7B2FFF" stroke-width="6" stroke-linecap="round"><path d="M48 158 l14 -14"/><path d="M152 158 l-14 -14"/></g>
+            </svg>
+            <figcaption>Dagas del cazador</figcaption>
+          </figure>
+
+          <figure class="tile tile-c reveal">
+            <svg viewBox="0 0 200 200" role="img" aria-label="Ventana del Sistema">
+              <rect x="30" y="45" width="140" height="110" rx="6" fill="rgba(45,140,255,.12)" stroke="#2D8CFF" stroke-width="2"/>
+              <rect x="30" y="45" width="140" height="18" rx="6" fill="rgba(45,140,255,.35)"/>
+              <g fill="#E8EEF7" opacity=".85"><rect x="44" y="78" width="70" height="5" rx="2"/><rect x="44" y="94" width="104" height="5" rx="2"/><rect x="44" y="110" width="88" height="5" rx="2"/></g>
+              <rect x="44" y="130" width="112" height="8" rx="3" fill="none" stroke="#7B2FFF"/>
+              <rect x="44" y="130" width="74" height="8" rx="3" fill="#7B2FFF"/>
+            </svg>
+            <figcaption>Ventana del Sistema</figcaption>
+          </figure>
+
+          <figure class="tile tile-d reveal">
+            <svg viewBox="0 0 200 200" role="img" aria-label="Silueta de soldado de sombra con aura violeta">
+              <defs><radialGradient id="gD" cx="50%" cy="60%" r="55%"><stop offset="0" stop-color="#7B2FFF" stop-opacity=".7"/><stop offset="1" stop-color="#7B2FFF" stop-opacity="0"/></radialGradient></defs>
+              <rect width="200" height="200" fill="url(#gD)"/>
+              <g fill="#0A0A14" stroke="#7B2FFF" stroke-width="2">
+                <circle cx="100" cy="62" r="16"/>
+                <path d="M72 175 L78 100 Q100 86 122 100 L128 175 Z"/>
+                <path d="M78 104 L52 140 M122 104 L148 140" fill="none" stroke-width="6" stroke-linecap="round"/>
+              </g>
+              <circle cx="94" cy="60" r="2.5" fill="#2D8CFF"/><circle cx="106" cy="60" r="2.5" fill="#2D8CFF"/>
+            </svg>
+            <figcaption>Soldado de sombra</figcaption>
+          </figure>
+
+          <figure class="tile tile-e reveal">
+            <svg viewBox="0 0 200 200" role="img" aria-label="Corona del Monarca con brillo violeta">
+              <path d="M45 140 L55 70 L85 105 L100 60 L115 105 L145 70 L155 140 Z" fill="rgba(123,47,255,.25)" stroke="#E8EEF7" stroke-width="2.5" stroke-linejoin="round"/>
+              <rect x="45" y="140" width="110" height="12" rx="3" fill="#7B2FFF"/>
+              <g fill="#2D8CFF"><circle cx="55" cy="70" r="4"/><circle cx="100" cy="60" r="5"/><circle cx="145" cy="70" r="4"/></g>
+            </svg>
+            <figcaption>Símbolo de poder</figcaption>
+          </figure>
+
+          <figure class="tile tile-f reveal">
+            <svg viewBox="0 0 200 200" role="img" aria-label="Barra de nivel subiendo">
+              <text x="100" y="85" text-anchor="middle" font-family="monospace" font-size="38" fill="#E8EEF7" font-weight="700">LV 99</text>
+              <rect x="30" y="110" width="140" height="14" rx="4" fill="none" stroke="#2D8CFF" stroke-width="2"/>
+              <rect x="30" y="110" width="112" height="14" rx="4" fill="#2D8CFF"/>
+              <g stroke="#7B2FFF" stroke-width="3" stroke-linecap="round"><path d="M100 150 v-18"/><path d="M92 140 l8 -9 l8 9"/></g>
+            </svg>
+            <figcaption>Subida de nivel</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TEMPORADAS ========== -->
+    <section class="section" id="temporadas">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">// REGISTRO DE EMISIÓN</p>
+          <h2>Temporadas y dónde verla</h2>
+          <p class="lead">Dos temporadas hasta ahora. Empieza por la primera y sigue en orden.</p>
+        </header>
+
+        <div class="season-grid">
+          <article class="glass season reveal">
+            <span class="tag tag-blue">TEMPORADA 1</span>
+            <h3>Solo Leveling</h3>
+            <p class="season-year">Enero de 2024 · 12 episodios</p>
+            <p>Presenta a Jin-woo, el Sistema y las primeras mazmorras que cambian su destino.</p>
+          </article>
+          <article class="glass season reveal">
+            <span class="tag tag-violet">TEMPORADA 2</span>
+            <h3>Arise from the Shadow</h3>
+            <p class="season-year">Enero de 2025 · 13 episodios</p>
+            <p>El poder de Jin-woo crece, el mundo lo nota y las Sombras ganan protagonismo.</p>
+          </article>
+        </div>
+
+        <div class="glass watch reveal">
+          <h3>¿Dónde verla?</h3>
+          <p>La serie está disponible en plataformas de streaming de anime, como Crunchyroll. La disponibilidad cambia según el país y el momento, así que comprueba el catálogo de tu región antes de empezar.</p>
+          <a class="btn btn-primary" href="https://www.crunchyroll.com/" target="_blank" rel="noopener noreferrer">Buscar en Crunchyroll</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <p class="logo-text">SOLO <b>LEVELING</b></p>
+        <p class="note">Sitio de fans sin fines de lucro, hecho con fines educativos.</p>
+      </div>
+      <div>
+        <h4>Créditos</h4>
+        <p class="note">Basado en la novela web de Chugong y el manhwa ilustrado por Dubu. Anime producido por A-1 Pictures.</p>
+      </div>
+      <div>
+        <h4>Enlaces</h4>
+        <ul class="footer-links">
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#personajes">Personajes</a></li>
+          <li><a href="#temporadas">Temporadas</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container legal">
+      <p>© Solo Leveling y todos sus personajes pertenecen a sus respectivos creadores y titulares de derechos, incluidos Chugong, Dubu, A-1 Pictures y sus licenciatarios. Este sitio no es oficial ni está afiliado a ellos. Las ilustraciones de la galería son originales.</p>
+    </div>
+  </footer>
+
+  <!-- ========== HUD: XP / NIVEL ========== -->
+  <div class="xp-hud" role="progressbar" aria-label="Progreso de lectura" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="xp-hud">
+    <span class="xp-level" id="xp-level">NIV. 1</span>
+    <div class="xp-track"><div class="xp-fill" id="xp-fill"></div></div>
+    <span class="xp-pct" id="xp-pct">0% XP</span>
+  </div>
+
+  <!-- Aviso de nivel -->
+  <div class="levelup" id="levelup" role="status" aria-live="assertive" hidden>
+    <p class="levelup-title">¡NIVEL UP!</p>
+    <p>Has completado el registro. Ahora eres <b>Nivel 10</b>.</p>
+  </div>
+
+  <button class="to-top" id="to-top" aria-label="Volver arriba" hidden>↑</button>
+
+  <!-- ========== MODAL DE PERSONAJE ========== -->
+  <dialog class="modal" id="char-modal" aria-labelledby="modal-name">
+    <div class="modal-body glass">
+      <button class="modal-close" id="modal-close" aria-label="Cerrar ficha">✕</button>
+      <div class="modal-head">
+        <div class="sigil sigil-lg" id="modal-sigil" aria-hidden="true"></div>
+        <div>
+          <p class="eyebrow" id="modal-cat"></p>
+          <h3 id="modal-name"></h3>
+          <p class="rank" id="modal-rank"></p>
+        </div>
+      </div>
+      <p id="modal-desc"></p>
+      <dl class="modal-facts" id="modal-facts"></dl>
+      <h4>Estadísticas (interpretación de fan)</h4>
+      <div class="bars" id="modal-stats"></div>
+      <p class="note" id="modal-spoiler" hidden>Esta ficha adelanta un detalle de la historia.</p>
+    </div>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
