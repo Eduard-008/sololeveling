@@ -346,26 +346,249 @@
   };
 
   /* ---------------------------------------------------------
-     MÓDULO · Copiar color de la paleta
+     MÓDULO · Tema (paleta configurable)
+     Aplica los colores como variables CSS en :root y los guarda
+     en el navegador (localStorage) para la próxima visita.
      --------------------------------------------------------- */
-  const Palette = {
-    init() {
-      this.note = $('#copy-note');
-      $$('.swatch').forEach(btn => btn.addEventListener('click', () => this.copy(btn.dataset.hex)));
+  const Theme = {
+    STORAGE_KEY: 'sl-theme-v1',
+
+    // Los colores que se pueden cambiar
+    FIELDS: [
+      { key: 'bg',     label: 'Fondo',             hint: 'Color base de la página' },
+      { key: 'bg2',    label: 'Superficie',        hint: 'Tarjetas y paneles' },
+      { key: 'blue',   label: 'Acento principal',  hint: 'Botones, bordes y brillos' },
+      { key: 'violet', label: 'Acento secundario', hint: 'Degradados y detalles' },
+      { key: 'cyan',   label: 'Resalte',           hint: 'Textos destacados y XP' },
+      { key: 'red',    label: 'Alerta',            hint: 'Peligro y cierre' },
+      { key: 'text',   label: 'Texto',             hint: 'Títulos y párrafos' }
+    ],
+
+    // Temas predefinidos (puedes añadir más aquí)
+    PRESETS: {
+      sistema:  { name: 'Sistema',            bg: '#0A0A14', bg2: '#14141F', blue: '#2D8CFF', violet: '#7B2FFF', cyan: '#38E1FF', red: '#C8102E', text: '#E8EEF7' },
+      sombras:  { name: 'Monarca de sombras', bg: '#0B0714', bg2: '#17101F', blue: '#A66BFF', violet: '#6D28D9', cyan: '#D8B4FE', red: '#E11D48', text: '#F1EBFA' },
+      carmesi:  { name: 'Puerta roja',        bg: '#0F0709', bg2: '#1C0E12', blue: '#F43F5E', violet: '#F97316', cyan: '#FDBA74', red: '#FF4D4D', text: '#F7ECEC' },
+      terminal: { name: 'Terminal',           bg: '#050D0A', bg2: '#0C1914', blue: '#22E57F', violet: '#00B8A9', cyan: '#7CFFCB', red: '#FF4D6D', text: '#E3F5EC' },
+      neon:     { name: 'Cian neón',          bg: '#0A0F1D', bg2: '#121A2E', blue: '#00D4FF', violet: '#3B82F6', cyan: '#5EEAD4', red: '#FB7185', text: '#E6F1FF' },
+      dorado:   { name: 'Rango S dorado',     bg: '#0E0B05', bg2: '#1B1509', blue: '#F5B700', violet: '#FF7A18', cyan: '#FFE08A', red: '#E5484D', text: '#FBF3E0' }
     },
-    async copy(hex) {
+    DEFAULT: 'sistema',
+
+    state: null,
+    listeners: [],
+
+    /* ---------- utilidades de color ---------- */
+    isHex(v) { return typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v); },
+    toRgb(hex) {
+      const n = parseInt(hex.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    },
+    luminance(hex) {
+      const [r, g, b] = this.toRgb(hex).map(v => {
+        const c = v / 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    },
+    contrast(a, b) {
+      const la = this.luminance(a), lb = this.luminance(b);
+      return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+    },
+    // Elige texto blanco u oscuro según cuál se lea mejor sobre los dos acentos
+    onAccent(c) {
+      const dark = c.bg;
+      const worst = text => Math.min(this.contrast(text, c.blue), this.contrast(text, c.violet));
+      return worst('#FFFFFF') >= worst(dark) ? '#FFFFFF' : dark;
+    },
+
+    /* ---------- estado ---------- */
+    clonePreset(id) {
+      const { name, ...colors } = this.PRESETS[id];
+      return colors;
+    },
+    defaults() {
+      return { preset: this.DEFAULT, colors: this.clonePreset(this.DEFAULT), particles: true };
+    },
+    load() {
+      const base = this.defaults();
+      try {
+        const saved = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || 'null');
+        if (!saved || typeof saved !== 'object') return base;
+        const colors = { ...base.colors };
+        this.FIELDS.forEach(({ key }) => { if (this.isHex(saved.colors?.[key])) colors[key] = saved.colors[key].toUpperCase(); });
+        const preset = (saved.preset in this.PRESETS || saved.preset === 'custom') ? saved.preset : 'custom';
+        return { preset, colors, particles: saved.particles !== false };
+      } catch (_) {
+        return base;
+      }
+    },
+    save() {
+      try { localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state)); } catch (_) { /* sin almacenamiento: no pasa nada */ }
+    },
+
+    /* ---------- aplicar al documento ---------- */
+    apply() {
+      const root = document.documentElement.style;
+      const c = this.state.colors;
+      this.FIELDS.forEach(({ key }) => {
+        root.setProperty(`--${key}`, c[key]);
+        root.setProperty(`--${key}-rgb`, this.toRgb(c[key]).join(', '));
+      });
+      root.setProperty('--on-accent', this.onAccent(c));
+      const meta = $('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', c.bg);
+      this.listeners.forEach(fn => fn(this.state));
+    },
+    onChange(fn) { this.listeners.push(fn); },
+
+    label() {
+      return this.state.preset === 'custom' ? 'Personalizado' : this.PRESETS[this.state.preset].name;
+    },
+    say(msg) { if (this.statusEl) this.statusEl.textContent = msg; },
+
+    /* ---------- interfaz del panel ---------- */
+    init() {
+      this.state = this.load();
+      this.apply();
+
+      this.fab = $('#theme-fab');
+      this.panel = $('#theme-panel');
+      this.overlay = $('#theme-overlay');
+      this.statusEl = $('#theme-status');
+      this.presetsEl = $('#theme-presets');
+      this.colorsEl = $('#theme-colors');
+      this.particlesEl = $('#theme-particles');
+      if (!this.fab || !this.panel) return;
+
+      this.renderPresets();
+      this.renderColors();
+      this.particlesEl.checked = this.state.particles;
+      this.say(`Tema actual: ${this.label()}`);
+
+      this.fab.addEventListener('click', () => this.open());
+      $('#theme-close').addEventListener('click', () => this.close());
+      this.overlay.addEventListener('click', () => this.close());
+      this.panel.addEventListener('keydown', e => this.trapFocus(e));
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && this.isOpen()) this.close(); });
+
+      this.presetsEl.addEventListener('click', e => {
+        const btn = e.target.closest('.preset');
+        if (btn) this.choosePreset(btn.dataset.preset);
+      });
+      this.colorsEl.addEventListener('input', e => {
+        const input = e.target.closest('input[type="color"]');
+        if (input) this.setColor(input.dataset.key, input.value);
+      });
+      this.particlesEl.addEventListener('change', () => {
+        this.state.particles = this.particlesEl.checked;
+        this.save();
+        this.listeners.forEach(fn => fn(this.state));
+      });
+      $('#theme-reset').addEventListener('click', () => this.reset());
+      $('#theme-copy').addEventListener('click', () => this.copy());
+    },
+
+    renderPresets() {
+      this.presetsEl.innerHTML = Object.entries(this.PRESETS).map(([id, p]) => `
+        <button class="preset" type="button" data-preset="${id}" aria-pressed="false" style="--p-bg:${p.bg}">
+          <span class="preset-preview" aria-hidden="true">
+            <i style="background:${p.blue}"></i><i style="background:${p.violet}"></i><i style="background:${p.cyan}"></i>
+          </span>
+          <span class="preset-name">${p.name}</span>
+        </button>`).join('');
+      this.markPreset();
+    },
+    markPreset() {
+      $$('.preset', this.presetsEl).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.preset === this.state.preset)));
+    },
+    renderColors() {
+      this.colorsEl.innerHTML = this.FIELDS.map(({ key, label, hint }) => `
+        <div class="color-row">
+          <label for="color-${key}">${label}<small>${hint}</small></label>
+          <code id="code-${key}">${this.state.colors[key]}</code>
+          <input type="color" id="color-${key}" data-key="${key}" value="${this.state.colors[key].toLowerCase()}">
+        </div>`).join('');
+    },
+    syncColorInputs() {
+      this.FIELDS.forEach(({ key }) => {
+        const input = $(`#color-${key}`), code = $(`#code-${key}`);
+        if (input) input.value = this.state.colors[key].toLowerCase();
+        if (code) code.textContent = this.state.colors[key];
+      });
+    },
+
+    /* ---------- acciones ---------- */
+    choosePreset(id) {
+      if (!(id in this.PRESETS)) return;
+      this.state.preset = id;
+      this.state.colors = this.clonePreset(id);
+      this.afterChange();
+    },
+    setColor(key, value) {
+      if (!this.isHex(value)) return;
+      this.state.colors[key] = value.toUpperCase();
+      this.state.preset = 'custom';
+      const code = $(`#code-${key}`);
+      if (code) code.textContent = this.state.colors[key];
+      this.afterChange(false);
+    },
+    reset() {
+      const d = this.defaults();
+      this.state = d;
+      this.particlesEl.checked = true;
+      this.afterChange();
+      this.say('Tema restablecido: Sistema');
+    },
+    afterChange(syncInputs = true) {
+      this.apply();
+      this.save();
+      this.markPreset();
+      if (syncInputs) this.syncColorInputs();
+      this.say(`Tema actual: ${this.label()}`);
+    },
+    async copy() {
+      const c = this.state.colors;
+      const text = ':root {\n' + this.FIELDS.map(({ key }) => `  --${key}: ${c[key]};`).join('\n') + '\n}';
       let ok = false;
       try {
-        await navigator.clipboard.writeText(hex);
+        await navigator.clipboard.writeText(text);
         ok = true;
       } catch (_) {
         const ta = document.createElement('textarea');
-        ta.value = hex; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
         document.body.appendChild(ta); ta.select();
         try { ok = document.execCommand('copy'); } catch (__) { ok = false; }
         ta.remove();
       }
-      if (this.note) this.note.textContent = ok ? `Copiado: ${hex}` : `Código del color: ${hex}`;
+      this.say(ok ? 'Paleta copiada como variables CSS.' : 'No se pudo copiar. Selecciona los códigos a mano.');
+    },
+
+    /* ---------- abrir / cerrar ---------- */
+    isOpen() { return this.panel.classList.contains('is-open'); },
+    open() {
+      this.panel.inert = false;
+      this.panel.classList.add('is-open');
+      this.overlay.classList.add('is-open');
+      document.documentElement.classList.add('theme-open');
+      this.fab.setAttribute('aria-expanded', 'true');
+      $('#theme-close').focus();
+    },
+    close() {
+      this.panel.classList.remove('is-open');
+      this.overlay.classList.remove('is-open');
+      document.documentElement.classList.remove('theme-open');
+      this.fab.setAttribute('aria-expanded', 'false');
+      this.panel.inert = true;
+      this.fab.focus();
+    },
+    trapFocus(e) {
+      if (e.key !== 'Tab') return;
+      const items = $$('button, input, [href], [tabindex]:not([tabindex="-1"])', this.panel).filter(el => !el.disabled);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
   };
 
@@ -373,18 +596,41 @@
      MÓDULO · Fondo de partículas / humo violeta (canvas)
      --------------------------------------------------------- */
   const Particles = {
+    palette: ['123,47,255', '45,140,255'],
+    enabled: true,
+    raf: 0,
     init() {
       this.canvas = $('#particles');
       if (!this.canvas) return;
       this.ctx = this.canvas.getContext('2d');
       this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-      this.running = true;
+      this.refreshColors();
       this.resize();
       this.spawn();
 
       let t;
-      window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { this.resize(); this.spawn(); }, 150); });
+      window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { this.resize(); this.spawn(); if (!this.raf) this.draw(); }, 150); });
 
+      // El tema avisa cuando cambian los colores o el interruptor de partículas
+      Theme.onChange(state => {
+        this.refreshColors();
+        this.setEnabled(state.particles);
+      });
+      this.setEnabled(Theme.state ? Theme.state.particles : true);
+    },
+    // Lee los acentos del tema (violeta y azul por defecto)
+    refreshColors() {
+      const c = Theme.state && Theme.state.colors;
+      if (!c) return;
+      this.palette = [Theme.toRgb(c.violet).join(','), Theme.toRgb(c.blue).join(',')];
+      if (this.items && !this.raf && this.enabled) this.draw();
+    },
+    setEnabled(on) {
+      this.enabled = on;
+      cancelAnimationFrame(this.raf);
+      this.raf = 0;
+      this.canvas.style.display = on ? '' : 'none';
+      if (!on) { this.ctx.clearRect(0, 0, this.w, this.h); return; }
       if (prefersReducedMotion) this.draw();
       else this.loop();
     },
@@ -409,7 +655,7 @@
         sway: Math.random() * Math.PI * 2,
         swaySpeed: 0.003 + Math.random() * 0.006,
         alpha: 0.025 + Math.random() * 0.06,
-        rgb: violet ? '123,47,255' : '45,140,255'
+        k: violet ? 0 : 1
       };
     },
     draw() {
@@ -417,8 +663,9 @@
       ctx.clearRect(0, 0, this.w, this.h);
       for (const p of this.items) {
         const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-        g.addColorStop(0, `rgba(${p.rgb},${p.alpha})`);
-        g.addColorStop(1, `rgba(${p.rgb},0)`);
+        const rgb = this.palette[p.k];
+        g.addColorStop(0, `rgba(${rgb},${p.alpha})`);
+        g.addColorStop(1, `rgba(${rgb},0)`);
         ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
@@ -435,10 +682,10 @@
       }
     },
     loop() {
-      if (!this.running) return;
+      if (!this.enabled) return;
       this.step();
       this.draw();
-      requestAnimationFrame(() => this.loop());
+      this.raf = requestAnimationFrame(() => this.loop());
     }
   };
 
@@ -446,12 +693,12 @@
      Inicio
      --------------------------------------------------------- */
   document.addEventListener('DOMContentLoaded', () => {
+    Theme.init();
     Nav.init();
     Reveal.init();
     Typing.init();
     Progress.init();
     Characters.init();
-    Palette.init();
     Particles.init();
   });
 })();
